@@ -36,6 +36,14 @@ $(function(){
   ctx = $canvas[0].getContext('2d');
   map = ctx.getImageData(0, 0, mapSize, mapSize);
 
+  for(var x=0; x<mapSize; x++){
+    for(var y=0; y<mapSize; y++){
+      var p = (x + y * mapSize) * 4
+      map.data[p] = map.data[p+1] = map.data[p+2] = 192;
+      map.data[p+3] = 255;
+    }
+  }
+
   requestAnimationFrame(render);
 
   var ant = new Ant(~~(mapSize / 2), ~~(mapSize / 2));
@@ -47,13 +55,13 @@ $(function(){
       ant.turnRight();
       ant.goStraight();
 
-      map.data[p] = 255;
+      map.data[p] = map.data[p+1] = map.data[p+2] = 255;
     }
     else {
       ant.turnLeft();
       ant.goStraight();
 
-      map.data[p] = 0;
+      map.data[p] = map.data[p+1] = map.data[p+2] = 0;
     }
 
     if(ant.x < 0 || ant.y < 0 || ant.x >= mapSize || ant.y >= mapSize){ clearInterval(timer); }
