@@ -21,12 +21,14 @@ Ant.prototype = {
 }
 
 var mapSize = 500;
-var map, ctx;
+var map, ctx, t = 0;
 
 var requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;
 
 function render(){
   ctx.putImageData(map, 0, 0);
+
+  ctx.fillText(t, 10, 20);
 
   requestAnimationFrame(render);
 }
@@ -64,6 +66,7 @@ $(function(){
       map.data[p] = map.data[p+1] = map.data[p+2] = 0;
     }
 
+    t++;
     if(ant.x < 0 || ant.y < 0 || ant.x >= mapSize || ant.y >= mapSize){ clearInterval(timer); }
   }, 1);
 });
