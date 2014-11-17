@@ -1,0 +1,36 @@
+h1{
+  font-size: 16px;
+}
+
+#map{
+  background-color: #eaeaea;
+}
+
+footer {
+  margin-top: 50px;
+  font-size: 11px;
+}
+
+.btn {
+  font-size: 12px;
+  padding: 5px;
+  cursor: pointer;
+  border: solid 1px #cacaca;
+}
+.btn:hover {
+  background: #fafafa;
+  border: solid 1px #999999;
+}
+
+.controller {
+  margin: 15px 0px;
+}
+
+#step {
+  width: 80px;
+  height: 20px;
+  font-size: 12px;
+  border: double 2px #cacaca;
+  padding: 1px 5px;
+  margin-right: 20px;
+}
