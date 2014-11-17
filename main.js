@@ -44,8 +44,8 @@ function clearCanvas(){
   for(var x=0; x<mapSize; x++){
     for(var y=0; y<mapSize; y++){
       var p = (x + y * mapSize) * 4
-      map.data[p] = map.data[p+1] = map.data[p+2] = 192;
-      map.data[p+3] = 255;
+      map.data[p] = map.data[p+1] = map.data[p+2] = 255;
+      map.data[p+3] = 0;
     }
   }
 }
@@ -74,19 +74,19 @@ function start(step){
 function move(){
   var p = (ant.x + ant.y * mapSize) * 4;
 
-  map.data[p+3] = 255;
-  if(map.data[p] === 0){
+  if(map.data[p] === 255){
     ant.turnRight();
     ant.goStraight();
 
-    map.data[p] = map.data[p+1] = map.data[p+2] = 255;
+    map.data[p] = map.data[p+1] = map.data[p+2] = 0;
   }
   else {
     ant.turnLeft();
     ant.goStraight();
 
-    map.data[p] = map.data[p+1] = map.data[p+2] = 0;
+    map.data[p] = map.data[p+1] = map.data[p+2] = 255;
   }
+  map.data[p+3] = 255;
 
   t++;
   return ant.x < 0 || ant.y < 0 || ant.x >= mapSize || ant.y >= mapSize
