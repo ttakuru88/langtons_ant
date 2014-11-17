@@ -20,25 +20,55 @@
     margin-top: 50px;
     font-size: 11px;
   }
+
+  .btn {
+    font-size: 12px;
+    padding: 5px;
+    cursor: pointer;
+    border: solid 1px #cacaca;
+  }
+  .btn:hover {
+    background: #fafafa;
+    border: solid 1px #999999;
+  }
+
+  .controller {
+    margin: 15px 0px;
+  }
+
+  #step {
+    width: 80px;
+    height: 20px;
+    font-size: 12px;
+    border: double 2px #cacaca;
+    padding: 1px 5px;
+    margin-right: 20px;
+  }
 </style>
 
 </head>
 <body>
 
 <header>
-  <h1>Langton's Ant Simulator v0.4.0</h1>
+  <h1>Langton's Ant Simulator v0.4.1</h1>
 </header>
 
 <canvas id="map"></canvas><br>
 
-<input type="text" id="step" value="animate">
-<label><input type="radio" name="change-step" value="animate" checked>animate</label>
-<label><input type="radio" name="change-step" value="5000">5,000</label>
-<label><input type="radio" name="change-step" value="10000">10,000</label>
-<label><input type="radio" name="change-step" value="30000">30,000</label>
-<label><input type="radio" name="change-step" value="100000">100,000</label>
-<label><input type="radio" name="change-step" value="500000">500,000</label>
-<label><input type="radio" name="change-step" value="1000000">1,000,000</label><br><br>
+<div class="controller">
+  <span class="btn js-play">▶ Play</span>
+  <span class="btn js-stop">■ Stop</span>
+</div>
+
+<div class="controller">
+  <input type="text" id="step" value="animate">
+  <span class="btn js-step-selector" data-step="5000">5,000</span>
+  <span class="btn js-step-selector" data-step="10000">10,000</span>
+  <span class="btn js-step-selector" data-step="30000">30,000</span>
+  <span class="btn js-step-selector" data-step="100000">100,000</span>
+  <span class="btn js-step-selector" data-step="500000">500,000</span>
+  <span class="btn js-step-selector" data-step="1000000">1,000,000</span>
+</div>
 
 <input type="text" id="pattern" value="RL">
 

@@ -78,11 +78,14 @@ function clearCanvas(color){
   }
 }
 
-function start(step, pattern){
+function updateState(step, pattern){
   history.pushState(null, document.title, "?s="+step+"&p="+pattern)
   $('#tweet-button').html('<a href="https://twitter.com/share" class="twitter-share-button" data-url="'+location.href+'">Tweet</a>')
   if(window.twttr.widgets) { twttr.widgets.load(); }
+}
 
+function start(step, pattern){
+  updateState(step, pattern);
   stop();
   ant = new Ant(~~(mapSize / 2), ~~(mapSize / 2), pattern);
   t = 0
@@ -91,16 +94,17 @@ function start(step, pattern){
 
   requestAnimationFrame(render);
 
-  if(step == 'animate') {
-    timer = setInterval(function(){
-      if(move()) { stop(); }
-    }, 1);
+  while(t < step){
+    if(move()){ break; };
   }
-  else{
-    while(t < step){
-      if(move()){ break; };
-    }
-  }
+}
+
+function play(){
+  if(timer) { return; }
+
+  timer = setInterval(function(){
+    if(move()) { stop(); }
+  }, 1);
 }
 
 function move(){
@@ -115,20 +119,31 @@ function move(){
 
 $(function(){
   var $ui = {
-    stepSelector: $('input[name=change-step]'),
+    stepSelector: $('.js-step-selector'),
     step:         $('#step'),
     canvas:       $('#map'),
-    pattern:      $('#pattern')
+    pattern:      $('#pattern'),
+    play:         $('.js-play'),
+    stop:         $('.js-stop')
   };
 
   $ui.canvas.attr('width', mapSize).attr('height', mapSize).css({width: mapSize, height: mapSize});
   ctx = $ui.canvas[0].getContext('2d');
   map = ctx.getImageData(0, 0, mapSize, mapSize);
 
-  $ui.stepSelector.on('change', function(e){
-    var step = $(e.target).val();
+  $ui.stepSelector.on('click', function(e){
+    var step = $(e.target).data('step');
     $ui.step.val(step);
     start(step, $ui.pattern.val());
+  });
+
+  $ui.play.on('click', function(){
+    play();
+  });
+
+  $ui.stop.on('click', function(){
+    stop();
+    updateState(t, $ui.pattern.val());
   });
 
   $ui.step.on('change', function(e){
