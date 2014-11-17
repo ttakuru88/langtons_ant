@@ -94,7 +94,7 @@ function move(){
 
 $(function(){
   var $ui = {
-    step_selector: $('input[name=change-step]'),
+    stepSelector: $('input[name=change-step]'),
     step:          $('#step'),
     canvas:        $('#map')
   };
@@ -105,7 +105,7 @@ $(function(){
 
   start('animation');
 
-  $ui.step_selector.on('change', function(e){
+  $ui.stepSelector.on('change', function(e){
     var step = $(e.target).val();
     $ui.step.val(step);
     start(step);
