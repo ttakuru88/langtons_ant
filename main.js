@@ -79,6 +79,8 @@ function clearCanvas(color){
 }
 
 function start(step, pattern){
+  history.pushState(null, document.title, "?s="+step+"&p="+pattern)
+
   stop();
   ant = new Ant(~~(mapSize / 2), ~~(mapSize / 2), pattern);
   t = 0
@@ -121,8 +123,6 @@ $(function(){
   ctx = $ui.canvas[0].getContext('2d');
   map = ctx.getImageData(0, 0, mapSize, mapSize);
 
-  start('animate', $ui.pattern.val());
-
   $ui.stepSelector.on('change', function(e){
     var step = $(e.target).val();
     $ui.step.val(step);
@@ -136,4 +136,19 @@ $(function(){
   $ui.pattern.on('change', function(e){
     start($ui.step.val(), $ui.pattern.val());
   });
+
+  var params = location.search.replace('?', '').split('&');
+  for(var i=0; i<params.length; i++){
+    var param = params[i].split('=');
+    switch(param[0]) {
+      case 's':
+        $ui.step.val(param[1]);
+        break;
+      case 'p':
+        $ui.pattern.val(param[1]);
+        break;
+    }
+  }
+
+  start($ui.step.val(), $ui.pattern.val());
 });
