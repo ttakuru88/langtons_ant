@@ -1,11 +1,36 @@
-function Ant(x, y) {
+function Ant(x, y, pattern) {
   this.x = x;
   this.y = y;
   this.v = 0; // 0 = 上, 1 = 右 2 = 下 3 = 左
   this.xVec = [0, 1, 0, -1];
   this.yVec = [-1, 0, 1, 0];
+  this.pattern = pattern;
+  this.patternLength = pattern.length;
+  this.cycle = 0;
+
+  this.colors = [];
+  for(var i=1; i<=this.patternLength; i++){
+    this.colors[~~(i/this.patternLength * 255)] = {
+      prev: i == 1 ? 255 : ~~((i-1)/this.patternLength * 255),
+      code: this.pattern[i-1],
+      next: i == this.patternLength ? ~~(1/this.patternLength * 255) : ~~((i+1)/this.patternLength * 255)
+    };
+  }
 }
 Ant.prototype = {
+  move: function(place){
+    if(this.colors[place].code == 'R'){
+      this.turnRight();
+      this.goStraight();
+    }
+    else {
+      this.turnLeft();
+      this.goStraight();
+    }
+
+    return this.colors[place].next;
+  },
+
   turnRight: function(){
     this.v++;
     if(this.v > 3) { this.v = 0; }
@@ -50,9 +75,9 @@ function clearCanvas(){
   }
 }
 
-function start(step){
+function start(step, pattern){
   stop();
-  ant = new Ant(~~(mapSize / 2), ~~(mapSize / 2));
+  ant = new Ant(~~(mapSize / 2), ~~(mapSize / 2), pattern);
   t = 0
 
   clearCanvas();
@@ -74,18 +99,7 @@ function start(step){
 function move(){
   var p = (ant.x + ant.y * mapSize) * 4;
 
-  if(map.data[p] === 255){
-    ant.turnRight();
-    ant.goStraight();
-
-    map.data[p] = map.data[p+1] = map.data[p+2] = 0;
-  }
-  else {
-    ant.turnLeft();
-    ant.goStraight();
-
-    map.data[p] = map.data[p+1] = map.data[p+2] = 255;
-  }
+  map.data[p] = map.data[p+1] = map.data[p+2] = ant.move(map.data[p]);
   map.data[p+3] = 255;
 
   t++;
@@ -95,23 +109,28 @@ function move(){
 $(function(){
   var $ui = {
     stepSelector: $('input[name=change-step]'),
-    step:          $('#step'),
-    canvas:        $('#map')
+    step:         $('#step'),
+    canvas:       $('#map'),
+    pattern:      $('#pattern')
   };
 
   $ui.canvas.attr('width', mapSize).attr('height', mapSize).css({width: mapSize, height: mapSize});
   ctx = $ui.canvas[0].getContext('2d');
   map = ctx.getImageData(0, 0, mapSize, mapSize);
 
-  start('animate');
+  start('animate', $ui.pattern.val());
 
   $ui.stepSelector.on('change', function(e){
     var step = $(e.target).val();
     $ui.step.val(step);
-    start(step);
+    start(step, $ui.pattern.val());
   });
 
   $ui.step.on('change', function(e){
-    start($ui.step.val());
+    start($ui.step.val(), $ui.pattern.val());
+  });
+
+  $ui.pattern.on('change', function(e){
+    start($ui.step.val(), $ui.pattern.val());
   });
 });
