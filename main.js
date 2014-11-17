@@ -93,16 +93,17 @@ function move(){
 }
 
 $(function(){
-  var $canvas = $('#map').attr('width', mapSize).attr('height', mapSize).css({width: mapSize, height: mapSize});
-  ctx = $canvas[0].getContext('2d');
+  var $ui = {
+    step_selector: $('input[name=change-step]'),
+    step:          $('#step'),
+    canvas:        $('#map')
+  };
+
+  $ui.canvas.attr('width', mapSize).attr('height', mapSize).css({width: mapSize, height: mapSize});
+  ctx = $ui.canvas[0].getContext('2d');
   map = ctx.getImageData(0, 0, mapSize, mapSize);
 
   start('animation');
-
-  var $ui = {
-    step_selector: $('input[name=change-step]'),
-    step: $('#step')
-  };
 
   $ui.step_selector.on('change', function(e){
     var step = $(e.target).val();
