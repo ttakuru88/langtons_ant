@@ -42,6 +42,9 @@ Ant.prototype = {
   goStraight: function(){
     this.x += this.xVec[this.v];
     this.y += this.yVec[this.v];
+  },
+  defaultColor: function(){
+    return ~~(1/this.patternLength * 255);
   }
 }
 
@@ -65,11 +68,11 @@ function stop(){
   }
 }
 
-function clearCanvas(){
+function clearCanvas(color){
   for(var x=0; x<mapSize; x++){
     for(var y=0; y<mapSize; y++){
       var p = (x + y * mapSize) * 4
-      map.data[p] = map.data[p+1] = map.data[p+2] = 255;
+      map.data[p] = map.data[p+1] = map.data[p+2] = color;
       map.data[p+3] = 0;
     }
   }
@@ -80,7 +83,7 @@ function start(step, pattern){
   ant = new Ant(~~(mapSize / 2), ~~(mapSize / 2), pattern);
   t = 0
 
-  clearCanvas();
+  clearCanvas(ant.defaultColor());
 
   requestAnimationFrame(render);
 
