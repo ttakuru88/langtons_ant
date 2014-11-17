@@ -2,8 +2,9 @@
 <html>
 <head>
 <meta charset="UTF-8" />
-<title>Langton's Ant</title>
+<title>Langton's Ant Simulator</title>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="http://platform.twitter.com/widgets.js"></script>
 <script src="./main.js" type="text/javascript"></script>
 
 <style>
@@ -16,7 +17,7 @@
   }
 
   footer {
-    margin-top: 100px;
+    margin-top: 50px;
     font-size: 11px;
   }
 </style>
@@ -32,16 +33,18 @@
 
 <input type="text" id="step" value="animate">
 <label><input type="radio" name="change-step" value="animate" checked>animate</label>
-<label><input type="radio" name="change-step" value="5000">5000</label>
-<label><input type="radio" name="change-step" value="10000">10000</label>
-<label><input type="radio" name="change-step" value="20000">30000</label>
-<label><input type="radio" name="change-step" value="30000">100000</label>
-<label><input type="radio" name="change-step" value="100000">500000</label>
-<label><input type="radio" name="change-step" value="1000000">10000000</label><br><br>
+<label><input type="radio" name="change-step" value="5000">5,000</label>
+<label><input type="radio" name="change-step" value="10000">10,000</label>
+<label><input type="radio" name="change-step" value="30000">30,000</label>
+<label><input type="radio" name="change-step" value="100000">100,000</label>
+<label><input type="radio" name="change-step" value="500000">500,000</label>
+<label><input type="radio" name="change-step" value="1000000">1,000,000</label><br><br>
 
 <input type="text" id="pattern" value="RL">
 
 <footer>
+  <span id="tweet-button"></span><br><br>
+
   by <a href="https://twitter.com/ttakuru88" target="_blank">@ttakuru88</a>
 </footer>
 

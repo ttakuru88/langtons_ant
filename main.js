@@ -80,6 +80,8 @@ function clearCanvas(color){
 
 function start(step, pattern){
   history.pushState(null, document.title, "?s="+step+"&p="+pattern)
+  $('#tweet-button').html('<a href="https://twitter.com/share" class="twitter-share-button" data-url="'+location.href+'">Tweet</a>')
+  if(window.twttr.widgets) { twttr.widgets.load(); }
 
   stop();
   ant = new Ant(~~(mapSize / 2), ~~(mapSize / 2), pattern);
