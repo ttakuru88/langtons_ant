@@ -59,7 +59,7 @@ function start(step){
 
   requestAnimationFrame(render);
 
-  if(step == 'animation') {
+  if(step == 'animate') {
     timer = setInterval(function(){
       if(move()) { stop(); }
     }, 1);
@@ -103,7 +103,7 @@ $(function(){
   ctx = $ui.canvas[0].getContext('2d');
   map = ctx.getImageData(0, 0, mapSize, mapSize);
 
-  start('animation');
+  start('animate');
 
   $ui.stepSelector.on('change', function(e){
     var step = $(e.target).val();
