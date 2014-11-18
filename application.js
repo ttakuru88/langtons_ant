@@ -78,14 +78,14 @@ function clearCanvas(color){
   }
 }
 
-function updateState(step, pattern){
-  history.pushState(null, document.title, "?s="+step+"&p="+pattern)
+function updateState(step, pattern, animate){
+  history.pushState(null, document.title, "?s="+step+"&p="+pattern+"&a="+animate)
   $('#tweet-button').html('<a href="https://twitter.com/share" class="twitter-share-button" data-url="'+location.href+'">Tweet</a>')
   if(window.twttr.widgets) { twttr.widgets.load(); }
 }
 
-function start(step, pattern){
-  updateState(step, pattern);
+function start(step, pattern, animate){
+  updateState(step, pattern, animate);
   stop();
   ant = new Ant(~~(mapSize / 2), ~~(mapSize / 2), pattern);
   t = 0
@@ -97,6 +97,8 @@ function start(step, pattern){
   while(t < step){
     if(move()){ break; };
   }
+
+  if(animate) { play(); }
 }
 
 function play(){
@@ -134,27 +136,29 @@ $(function(){
   $ui.stepSelector.on('click', function(e){
     var step = $(e.target).data('step');
     $ui.step.val(step);
-    start(step, $ui.pattern.val());
+    start(step, $ui.pattern.val(), 0);
   });
 
   $ui.play.on('click', function(){
+    updateState(t, $ui.pattern.val(), 1);
     play();
   });
 
   $ui.stop.on('click', function(){
     stop();
-    updateState(t, $ui.pattern.val());
+    updateState(t, $ui.pattern.val(), 0);
   });
 
   $ui.step.on('change', function(e){
-    start($ui.step.val(), $ui.pattern.val());
+    start($ui.step.val(), $ui.pattern.val(), 0);
   });
 
   $ui.pattern.on('change', function(e){
-    start($ui.step.val(), $ui.pattern.val());
+    start($ui.step.val(), $ui.pattern.val(), 0);
   });
 
   var params = location.search.replace('?', '').split('&');
+  var animate = 0;
   for(var i=0; i<params.length; i++){
     var param = params[i].split('=');
     switch(param[0]) {
@@ -164,8 +168,11 @@ $(function(){
       case 'p':
         $ui.pattern.val(param[1]);
         break;
+      case 'a':
+        animate = +param[1];
+        break;
     }
   }
 
-  start($ui.step.val(), $ui.pattern.val());
+  start($ui.step.val(), $ui.pattern.val(), animate);
 });
