@@ -11,18 +11,19 @@
 <body>
 
 <header>
-  <h1>Langton's Ant Simulator v0.4.2</h1>
+  <h1>Langton's Ant Simulator v0.5.0</h1>
 </header>
 
 <canvas id="map"></canvas><br>
 
 <div class="controller">
-  <input type="text" id="zoom" value="1" class="output">
+  <input type="hidden" id="zoom" value="1">
   <span class="btn btn-zoom js-zoom-in">+</span>
   <span class="btn btn-zoom js-zoom-out">-</span>
 </div>
 
 <div class="controller">
+  <input type="hidden" id="animating" value="0">
   <span class="btn js-play">▶ Play</span>
   <span class="btn js-stop">■ Stop</span>
 </div>

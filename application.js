@@ -143,7 +143,8 @@ $(function(){
     stop:         $('.js-stop'),
     zoomIn:       $('.js-zoom-in'),
     zoomOut:      $('.js-zoom-out'),
-    scale:        $('#zoom')
+    scale:        $('#zoom'),
+    animating:    $('#animating')
   };
 
   $ui.canvas.attr('width', mapSize).attr('height', mapSize).css({width: mapSize, height: mapSize});
@@ -153,24 +154,26 @@ $(function(){
   $ui.stepSelector.on('click', function(e){
     var step = $(e.target).data('step');
     $ui.step.val(step);
-    start(step, $ui.pattern.val(), 0, $ui.scale.val());
+    start(step, $ui.pattern.val(), $ui.animating.val(), $ui.scale.val());
   });
 
   $ui.play.on('click', function(){
-    updateState(t, $ui.pattern.val(), 1, $ui.scale.val());
+    $ui.animating.val(1);
+    updateState(t, $ui.pattern.val(), $ui.animating.val(), $ui.scale.val());
     play();
   });
 
   $ui.stop.on('click', function(){
+    $ui.animating.val(0);
     stop();
-    updateState(t, $ui.pattern.val(), 0, $ui.scale.val());
+    updateState(t, $ui.pattern.val(), $ui.animating.val(), $ui.scale.val());
   });
 
   $ui.zoomIn.on('click', function(e){
     var scale = parseInt($ui.scale.val())+1;
     $ui.scale.val(scale);
 
-    start(t, $ui.pattern.val(), 0, $ui.scale.val());
+    start(t, $ui.pattern.val(), $ui.animating.val(), $ui.scale.val());
   });
 
   $ui.zoomOut.on('click', function(e){
@@ -178,20 +181,18 @@ $(function(){
     if(scale < 1) { scale = 1; }
     $ui.scale.val(scale);
 
-    start(t, $ui.pattern.val(), 0, $ui.scale.val());
+    start(t, $ui.pattern.val(), $ui.animating.val(), $ui.scale.val());
   });
 
   $ui.step.on('change', function(e){
-    start($ui.step.val(), $ui.pattern.val(), 0, $ui.scale.val());
+    start($ui.step.val(), $ui.pattern.val(), $ui.animating.val(), $ui.scale.val());
   });
 
   $ui.pattern.on('change', function(e){
-    start($ui.step.val(), $ui.pattern.val(), 0, $ui.scale.val());
+    start($ui.step.val(), $ui.pattern.val(), $ui.animating.val(), $ui.scale.val());
   });
 
   var params = location.search.replace('?', '').split('&');
-  var animate = 0;
-  var scale = 1;
   for(var i=0; i<params.length; i++){
     var param = params[i].split('=');
     switch(param[0]) {
@@ -202,7 +203,7 @@ $(function(){
         $ui.pattern.val(param[1]);
         break;
       case 'a':
-        animate = +param[1];
+        $ui.animating.val(param[1])
         break;
       case 'c':
         $ui.scale.val(param[1]);
@@ -210,5 +211,5 @@ $(function(){
     }
   }
 
-  start($ui.step.val(), $ui.pattern.val(), animate, +$ui.scale.val());
+  start($ui.step.val(), $ui.pattern.val(), +$ui.animating.val(), +$ui.scale.val());
 });
