@@ -101,11 +101,12 @@ function start(step, pattern, animate, scale){
 
   requestAnimationFrame(render);
 
+  var end = false;
   while(t < step){
-    if(move()){ break; };
+    if(move()){ end = true; break; };
   }
 
-  if(animate) { play(); }
+  if(animate && !end) { play(); }
 }
 
 function play(){
