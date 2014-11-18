@@ -1,12 +1,18 @@
-function Ant(x, y, pattern) {
+function Ant(x, y, pattern, scale) {
   this.x = x;
   this.y = y;
   this.v = 0; // 0 = 上, 1 = 右 2 = 下 3 = 左
-  this.xVec = [0, 1, 0, -1];
-  this.yVec = [-1, 0, 1, 0];
   this.pattern = pattern;
   this.patternLength = pattern.length;
   this.cycle = 0;
+  this.scale = scale;
+
+  this.xVec = [0, 1, 0, -1];
+  this.yVec = [-1, 0, 1, 0];
+  for(var i=0; i<4; i++){
+    this.xVec[i] *= scale;
+    this.yVec[i] *= scale;
+  }
 
   this.colors = [];
   for(var i=1; i<=this.patternLength; i++){
@@ -49,6 +55,7 @@ Ant.prototype = {
 }
 
 var mapSize = 500;
+var intervalMs = 1;
 var map, ctx, t = 0, timer, ant;
 
 var requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;
@@ -78,16 +85,16 @@ function clearCanvas(color){
   }
 }
 
-function updateState(step, pattern, animate){
-  history.pushState(null, document.title, "?s="+step+"&p="+pattern+"&a="+animate)
+function updateState(step, pattern, animate, scale){
+  history.pushState(null, document.title, "?s="+step+"&p="+pattern+"&a="+animate+"&c="+scale)
   $('#tweet-button').html('<a href="https://twitter.com/share" class="twitter-share-button" data-url="'+location.href+'">Tweet</a>')
   if(window.twttr.widgets) { twttr.widgets.load(); }
 }
 
-function start(step, pattern, animate){
-  updateState(step, pattern, animate);
+function start(step, pattern, animate, scale){
+  updateState(step, pattern, animate, scale);
   stop();
-  ant = new Ant(~~(mapSize / 2), ~~(mapSize / 2), pattern);
+  ant = new Ant(~~(mapSize / 2), ~~(mapSize / 2), pattern, scale);
   t = 0
 
   clearCanvas(ant.defaultColor());
@@ -106,14 +113,21 @@ function play(){
 
   timer = setInterval(function(){
     if(move()) { stop(); }
-  }, 1);
+  }, intervalMs);
 }
 
 function move(){
   var p = (ant.x + ant.y * mapSize) * 4;
+  var prevX = ant.x, prevY = ant.y;
+  var color = ant.move(map.data[p]);
 
-  map.data[p] = map.data[p+1] = map.data[p+2] = ant.move(map.data[p]);
-  map.data[p+3] = 255;
+  for(var y=0; y<ant.scale; y++){
+    for(var x=0; x<ant.scale; x++){
+      p = ((prevX + x) + (prevY + y) * mapSize) * 4;
+      map.data[p] = map.data[p+1] = map.data[p+2] = color
+      map.data[p+3] = 255;
+    }
+  }
 
   t++;
   return ant.x < 0 || ant.y < 0 || ant.x >= mapSize || ant.y >= mapSize
@@ -126,7 +140,10 @@ $(function(){
     canvas:       $('#map'),
     pattern:      $('#pattern'),
     play:         $('.js-play'),
-    stop:         $('.js-stop')
+    stop:         $('.js-stop'),
+    zoomIn:       $('.js-zoom-in'),
+    zoomOut:      $('.js-zoom-out'),
+    scale:        $('#zoom')
   };
 
   $ui.canvas.attr('width', mapSize).attr('height', mapSize).css({width: mapSize, height: mapSize});
@@ -136,29 +153,45 @@ $(function(){
   $ui.stepSelector.on('click', function(e){
     var step = $(e.target).data('step');
     $ui.step.val(step);
-    start(step, $ui.pattern.val(), 0);
+    start(step, $ui.pattern.val(), 0, $ui.scale.val());
   });
 
   $ui.play.on('click', function(){
-    updateState(t, $ui.pattern.val(), 1);
+    updateState(t, $ui.pattern.val(), 1, $ui.scale.val());
     play();
   });
 
   $ui.stop.on('click', function(){
     stop();
-    updateState(t, $ui.pattern.val(), 0);
+    updateState(t, $ui.pattern.val(), 0, $ui.scale.val());
+  });
+
+  $ui.zoomIn.on('click', function(e){
+    var scale = parseInt($ui.scale.val())+1;
+    $ui.scale.val(scale);
+
+    start(t, $ui.pattern.val(), 0, $ui.scale.val());
+  });
+
+  $ui.zoomOut.on('click', function(e){
+    var scale = parseInt($ui.scale.val())-1;
+    if(scale < 1) { scale = 1; }
+    $ui.scale.val(scale);
+
+    start(t, $ui.pattern.val(), 0, $ui.scale.val());
   });
 
   $ui.step.on('change', function(e){
-    start($ui.step.val(), $ui.pattern.val(), 0);
+    start($ui.step.val(), $ui.pattern.val(), 0, $ui.scale.val());
   });
 
   $ui.pattern.on('change', function(e){
-    start($ui.step.val(), $ui.pattern.val(), 0);
+    start($ui.step.val(), $ui.pattern.val(), 0, $ui.scale.val());
   });
 
   var params = location.search.replace('?', '').split('&');
   var animate = 0;
+  var scale = 1;
   for(var i=0; i<params.length; i++){
     var param = params[i].split('=');
     switch(param[0]) {
@@ -171,8 +204,11 @@ $(function(){
       case 'a':
         animate = +param[1];
         break;
+      case 'c':
+        $ui.scale.val(param[1]);
+        break;
     }
   }
 
-  start($ui.step.val(), $ui.pattern.val(), animate);
+  start($ui.step.val(), $ui.pattern.val(), animate, +$ui.scale.val());
 });

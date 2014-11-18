@@ -17,12 +17,18 @@
 <canvas id="map"></canvas><br>
 
 <div class="controller">
+  <input type="text" id="zoom" value="1" class="output">
+  <span class="btn btn-zoom js-zoom-in">+</span>
+  <span class="btn btn-zoom js-zoom-out">-</span>
+</div>
+
+<div class="controller">
   <span class="btn js-play">▶ Play</span>
   <span class="btn js-stop">■ Stop</span>
 </div>
 
 <div class="controller">
-  <input type="text" id="step" value="0">
+  <input type="text" id="step" value="0" class="output">
   <span class="btn js-step-selector" data-step="0">0</span>
   <span class="btn js-step-selector" data-step="5000">5,000</span>
   <span class="btn js-step-selector" data-step="10000">10,000</span>

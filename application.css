@@ -21,16 +21,25 @@ footer {
   background: #fafafa;
   border: solid 1px #999999;
 }
+.btn.btn-zoom{
+  width: 20px;
+  height: 20px;
+}
 
 .controller {
   margin: 15px 0px;
 }
 
-#step {
-  width: 80px;
+.output{
   height: 20px;
   font-size: 12px;
   border: double 2px #cacaca;
   padding: 1px 5px;
   margin-right: 20px;
+}
+#step {
+  width: 80px;
+}
+#zoom {
+  width: 40px;
 }
