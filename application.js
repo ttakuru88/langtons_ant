@@ -92,6 +92,9 @@ function updateState(step, pattern, animate, scale){
 }
 
 function start(step, pattern, animate, scale){
+  animate = +animate;
+  scale = +scale;
+
   updateState(step, pattern, animate, scale);
   stop();
   ant = new Ant(~~(mapSize / 2), ~~(mapSize / 2), pattern, scale);
@@ -212,5 +215,5 @@ $(function(){
     }
   }
 
-  start($ui.step.val(), $ui.pattern.val(), +$ui.animating.val(), +$ui.scale.val());
+  start($ui.step.val(), $ui.pattern.val(), $ui.animating.val(), $ui.scale.val());
 });
