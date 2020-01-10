@@ -2,4 +2,4 @@
 
 ## Demo
 
-[Demo](http://hai3.net/langtons_ant/)
+[Demo](https://hai3.net/langtons_ant/)
